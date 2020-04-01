@@ -1,3 +1,4 @@
+TRUNCATE shopping_list;
 INSERT INTO shopping_list (name, price, category, checked, date_added)
 VALUES
     ('Fish tricks', 13.10, 'Main',              false,  now() - '21 days'::INTERVAL),
@@ -30,5 +31,5 @@ VALUES
     ('Arti-fish-al pie', 8.40, 'Main',          false,  now() - '1 days'::INTERVAL),
     ('Bolphony sandwiches', 2.10, 'Lunch',      false,  now()),
     ('Chili non-carne', 5.88, 'Main',           true,   now()),
-    ('Don''t go bacon my heart', 4.20, 'Main',  false,  now())
+    ('Don''t go bacon my heart', 4.20, 'Main',  false,  now());
 ;
