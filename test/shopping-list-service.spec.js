@@ -129,5 +129,66 @@ describe('ShoppingList service object', () => {
     })
   })
 
+  describe('deleteItem()', () => {
+    it('shoul return 0 rows affected', () => {
+      return ShoppingListService
+        .deleteItem(db, 999)
+        .then(rowsAffected => expect(rowsAffected).to.eq(0))
+    })
+
+    context('with data present', () => {
+      before('insert items', () => 
+        db('shopping_list')
+          .insert(testItems)
+      )
+
+      it('should return 1 row affected and record is removed from db', () => {
+        const deletedItemId = 1
+
+        return ShoppingListService
+          .deleteItem(db, deletedItemId)
+          .then(rowsAffected => {
+            expect(rowsAffected).to.eq(1)
+            return db('shopping_list').select('*')
+          })
+          .then(actual => {
+            const expected = testItems.filter(a => a.id !== deletedItemId)
+            expect(actual).to.eql(expected)
+          })
+      })
+    })
+  })
+
+  describe('updateItem', () => {
+    it('should return 0 rows affected', () => {
+      return ShoppingListService
+        .updateItem(db, 999, { name: 'new name!'})
+        .then(rowsAffected => expect(rowsAffected).to.eq(0))
+    })
+
+    context('with data present', () => {
+      before('insert articles', () => 
+      db('shopping_list')
+      .insert(testItems)
+      )
+
+      it('should successfully update an article', () => {
+        const updatedItemId = 1
+        const testItem = testItems.find(a => a.id === updatedItemId)
+        const updatedItem = {...testItem, name: 'new name!'}
+
+        return ShoppingListService
+          .updateItem(db, updatedItemId, updatedItem)
+          .then(rowsAffected => {
+            expect(rowsAffected).to.eq(1)
+            return db('shopping_list').select('*').where({ id: updatedItemId }).first()
+          })
+          .then(item => {
+            expect(item).to.eql(updatedItem)
+          })
+      })
+    })
+  })
+
 
 })
